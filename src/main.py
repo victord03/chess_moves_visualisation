@@ -2,7 +2,7 @@
 class BoardState:
     state: dict
 
-    def __init__(self):
+    def __init__(self) -> None:
 
         self.state = {
             'A1': '',
@@ -72,70 +72,109 @@ class BoardState:
 
         }
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key, value) -> None:
         self.state[key] = value
 
 
 class ChessPiece:
     name: str
     colour: str
-    position: str
-    # pawn_double_move: bool
+    current_rank: str
+    current_file: str
 
-    def __init__(self, name, colour, position, board):
+    def __init__(self, name, colour, position, board) -> None:
         self.name = name
         self.colour = colour
-        self.position = position
+        self.current_rank = position[0]
+        self.current_file = position[1]
         self.update_board_state(board)
 
-    def update_board_state(self, board: BoardState):
-        board[f'{self.position[0]}{self.position[1]}'] = self.name
+    def update_board_state(self, board: BoardState) -> None:
+        board[f'{self.current_rank}{self.current_file}'] = self.name
 
-    def rook_instructions(self) -> tuple:
-        current_position_rank = self.position[0]
-        current_position_file = self.position[1]
+
+class Rook(ChessPiece):
+
+    def __init__(self, name, colour, position, board):
+        super().__init__(name, colour, position, board)
+
+    def find_legal_moves(self) -> tuple:
 
         all_legal_moves = list()
 
         for file in files:
-            if file == current_position_file:
+            if file == self.current_file:
                 continue
-            all_legal_moves.append(f'{current_position_rank}{file}')
+            all_legal_moves.append(f'{self.current_rank}{file}')
 
         for rank in ranks:
-            if rank == current_position_rank:
+            if rank == self.current_rank:
                 continue
-            all_legal_moves.append(f'{rank}{current_position_file}')
+            all_legal_moves.append(f'{rank}{self.current_file}')
 
-        # print(all_legal_moves)
         return tuple(all_legal_moves)
 
-    def pawn_instructions(self):
-        ...
 
-    def knight_instructions(self):
-        ...
+class Pawn(ChessPiece):
+
+    def __init__(self, name, colour, position, board):
+        super().__init__(name, colour, position, board)
+
+    def find_legal_moves(self) -> tuple:
+
+        if self.current_file == '2':
+            all_legal_moves = [f'{self.current_rank}3', f'{self.current_rank}4']
+        elif self.current_file == '7':
+            all_legal_moves = [f'{self.current_rank}6', f'{self.current_rank}5']
+        elif self.current_file == '1':
+            all_legal_moves = ['']
+        elif self.current_file == '8':
+            all_legal_moves = ['']
+        else:
+            all_legal_moves = [f'{self.current_rank}{int(self.current_file)+1}']
+
+        return tuple(all_legal_moves)
+
+
+class Knight(ChessPiece):
+
+    def __init__(self, name, colour, position, board):
+        super().__init__(name, colour, position, board)
+
+    def find_legal_moves(self) -> tuple:
+        all_legal_moves = list()
+
+        return tuple(all_legal_moves)
 
 
 ranks = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
 files = ['1', '2', '3', '4', '5', '6', '7', '8']
 
 
-def generate_legal_moves_for(piece: ChessPiece):
+def generate_legal_moves_for(piece) -> tuple:
+
+    pieces = {
+        0: Rook,
+        1: Pawn,
+        2: Knight,
+    }
 
     if piece.name == 'Rook':
-        return piece.rook_instructions()
+        return pieces[0].find_legal_moves(piece)
 
 
-def visualise_moves_for(piece: ChessPiece):
+def visualise_moves_for(piece):
     ...
 
 
 def main():
     board = BoardState()
 
-    rook = ChessPiece(name='Rook', colour='White', position=('A', '1'), board=board)
-    generate_legal_moves_for(rook)
+    rook_white = Rook(name='Rook', colour='White', position='A1', board=board)
+    pawn_black = Pawn(name='Pawn', colour='Black', position='A2', board=board)
+
+    # generate_legal_moves_for(rook_white)
+    # print(pawn_black.instructions())
 
     # print(board.state)
     # print(len(list(board.state.keys())))
