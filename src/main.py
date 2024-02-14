@@ -131,7 +131,11 @@ class Pawn(ChessPiece):
         elif self.current_file == '8':
             all_legal_moves = ['']
         else:
-            all_legal_moves = [f'{self.current_rank}{int(self.current_file)+1}']
+
+            if self.colour == 'White':
+                all_legal_moves = [f'{self.current_rank}{int(self.current_file)+1}']
+            else:
+                all_legal_moves = [f'{self.current_rank}{int(self.current_file)-1}']
 
         return tuple(all_legal_moves)
 
@@ -143,6 +147,15 @@ class Knight(ChessPiece):
 
     def find_legal_moves(self) -> tuple:
         all_legal_moves = list()
+
+        # self.current_rank + 2, self.current_file + 1
+        # self.current_rank + 2, self.current_file - 1
+        # self.current_rank - 2, self.current_file - 1
+        # self.current_rank - 2, self.current_file + 1
+        # self.current_file + 2, self.current_rank + 1
+        # self.current_file + 2, self.current_rank - 1
+        # self.current_file - 2, self.current_rank + 1
+        # self.current_file - 2, self.current_rank - 1
 
         return tuple(all_legal_moves)
 
@@ -173,8 +186,7 @@ def main():
     rook_white = Rook(name='Rook', colour='White', position='A1', board=board)
     pawn_black = Pawn(name='Pawn', colour='Black', position='A2', board=board)
 
-    # generate_legal_moves_for(rook_white)
-    # print(pawn_black.instructions())
+    # print(list(map(generate_legal_moves_for, [pawn_black, rook_white])))
 
     # print(board.state)
     # print(len(list(board.state.keys())))
