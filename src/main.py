@@ -77,26 +77,31 @@ class BoardState:
 
 
 class ChessPiece:
-    name: str
-    colour: str
-    current_rank: str
-    current_file: str
 
-    def __init__(self, name, colour, position, board) -> None:
-        self.name = name
-        self.colour = colour
-        self.current_rank = position[0]
-        self.current_file = position[1]
+    def __init__(self, board):
         self.update_board_state(board)
+
+    def __str__(self):
+        return f'{self.name}({self.position})'
 
     def update_board_state(self, board: BoardState) -> None:
         board[f'{self.current_rank}{self.current_file}'] = self.name
 
 
 class Rook(ChessPiece):
+    name: str
+    colour: str
+    position: str
+    current_rank: str
+    current_file: str
 
-    def __init__(self, name, colour, position, board):
-        super().__init__(name, colour, position, board)
+    def __init__(self, colour, position, board):
+        self.name = 'Rook'
+        self.colour = colour
+        self.position = position
+        self.current_rank = position[0]
+        self.current_file = position[1]
+        super().__init__(board)
 
     def find_legal_moves(self) -> tuple:
 
@@ -116,9 +121,18 @@ class Rook(ChessPiece):
 
 
 class Pawn(ChessPiece):
+    name: str
+    colour: str
+    position: str
+    current_rank: str
+    current_file: str
 
-    def __init__(self, name, colour, position, board):
-        super().__init__(name, colour, position, board)
+    def __init__(self, colour, position, board):
+        self.name = 'Pawn'
+        self.colour = colour
+        self.current_rank = position[0]
+        self.current_file = position[1]
+        super().__init__(board)
 
     def find_legal_moves(self) -> tuple:
 
@@ -134,6 +148,24 @@ class Pawn(ChessPiece):
 
             if self.colour == 'White':
                 all_legal_moves = [f'{self.current_rank}{int(self.current_file)+1}']
+
+        all_legal_moves = list()
+
+        # pawn white
+        if self.colour == 'White':
+            if self.current_file == '2':
+                all_legal_moves = [f'{self.current_rank}3', f'{self.current_rank}4']
+            elif self.current_file == '1':
+                all_legal_moves = ['Promotion']
+            else:
+                all_legal_moves = [f'{self.current_rank}{int(self.current_file)+1}']
+
+        # pawn black
+        elif self.colour == 'Black':
+            if self.current_file == '7':
+                all_legal_moves = [f'{self.current_rank}6', f'{self.current_rank}5']
+            elif self.current_file == '8':
+                all_legal_moves = ['Promotion']
             else:
                 all_legal_moves = [f'{self.current_rank}{int(self.current_file)-1}']
 
@@ -141,9 +173,19 @@ class Pawn(ChessPiece):
 
 
 class Knight(ChessPiece):
+    name: str
+    colour: str
+    position: str
+    current_rank: str
+    current_file: str
 
-    def __init__(self, name, colour, position, board):
-        super().__init__(name, colour, position, board)
+    def __init__(self, colour, position, board):
+        super().__init__(board)
+        self.name = 'Knight'
+        self.colour = colour
+        self.current_rank = position[0]
+        self.current_file = position[1]
+        super().__init__(board)
 
     def find_legal_moves(self) -> tuple:
         all_legal_moves = list()
@@ -183,10 +225,14 @@ def visualise_moves_for(piece):
 def main():
     board = BoardState()
 
-    rook_white = Rook(name='Rook', colour='White', position='A1', board=board)
-    pawn_black = Pawn(name='Pawn', colour='Black', position='A2', board=board)
+    rook_white = Rook(colour='White', position='A1', board=board)
+    pawn_black = Pawn(colour='Black', position='A2', board=board)
 
     # print(list(map(generate_legal_moves_for, [pawn_black, rook_white])))
+
+    # print(rook_white)
+    # generate_legal_moves_for(rook_white)
+    # print(pawn_black.instructions())
 
     # print(board.state)
     # print(len(list(board.state.keys())))
