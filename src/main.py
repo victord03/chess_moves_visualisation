@@ -136,7 +136,7 @@ class Pawn(ChessPiece):
 
     def find_legal_moves(self) -> tuple:
 
-        if self.current_file == '2':
+        """if self.current_file == '2':
             all_legal_moves = [f'{self.current_rank}3', f'{self.current_rank}4']
         elif self.current_file == '7':
             all_legal_moves = [f'{self.current_rank}6', f'{self.current_rank}5']
@@ -144,10 +144,10 @@ class Pawn(ChessPiece):
             all_legal_moves = ['']
         elif self.current_file == '8':
             all_legal_moves = ['']
-        else:
+        else:"""
 
-            if self.colour == 'White':
-                all_legal_moves = [f'{self.current_rank}{int(self.current_file)+1}']
+        # if self.colour == 'White':
+            # all_legal_moves = [f'{self.current_rank}{int(self.current_file)+1}']
 
         all_legal_moves = list()
 
