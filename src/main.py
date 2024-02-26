@@ -226,12 +226,12 @@ def main():
     board = BoardState()
 
     rook_white = Rook(colour='White', position='A1', board=board)
-    pawn_black = Pawn(colour='Black', position='A2', board=board)
+    pawn_black = Pawn(colour='Black', position='A7', board=board)
 
     # print(list(map(generate_legal_moves_for, [pawn_black, rook_white])))
 
     # print(rook_white)
-    # generate_legal_moves_for(rook_white)
+    # print(generate_legal_moves_for(rook_white))
     # print(pawn_black.instructions())
 
     # print(board.state)
