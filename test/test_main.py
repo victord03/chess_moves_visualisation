@@ -44,12 +44,12 @@ class TestPiece:
     def test_white_pawn(self):
         board = setup_board()
         white_a_pawn = m.Pawn(colour='White', position='A2', board=board)
-        assert white_a_pawn.find_legal_moves() == ('A3', 'A4')
+        assert white_a_pawn.find_legal_moves_for() == ('A3', 'A4')
 
     def test_black_pawn(self):
         board = setup_board()
         black_b_pawn = m.Pawn(colour='Black', position='B7', board=board)
-        assert black_b_pawn.find_legal_moves() == ('B6', 'B5')
+        assert black_b_pawn.find_legal_moves_for() == ('B6', 'B5')
 
 
 class TestVisualisationEngine:

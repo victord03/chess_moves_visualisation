@@ -1,5 +1,6 @@
 
 class BoardState:
+    """This is a python representation of the board, as a dictionary."""
     state: dict
 
     def __init__(self) -> None:
@@ -77,18 +78,24 @@ class BoardState:
 
 
 class ChessPiece:
+    """
+    The parent ChessPiece object.
+
+    print(ChessPiece) >>> ChessPiece.name(f'{ChessPiece.position') / e.g. Pawn('A5')
+    """
 
     def __init__(self, board):
-        self.update_board_state(board)
+        self.update_state(board)
 
     def __str__(self):
         return f'{self.name}({self.position})'
 
-    def update_board_state(self, board: BoardState) -> None:
+    def update_state(self, board: BoardState) -> None:
         board[f'{self.current_rank}{self.current_file}'] = self.name
 
 
 class Rook(ChessPiece):
+    """The Rook subclass of a ChessPiece."""
     name: str
     colour: str
     position: str
@@ -121,6 +128,7 @@ class Rook(ChessPiece):
 
 
 class Pawn(ChessPiece):
+    """The Rook subclass of a ChessPiece."""
     name: str
     colour: str
     position: str
@@ -134,20 +142,7 @@ class Pawn(ChessPiece):
         self.current_file = position[1]
         super().__init__(board)
 
-    def find_legal_moves(self) -> tuple:
-
-        """if self.current_file == '2':
-            all_legal_moves = [f'{self.current_rank}3', f'{self.current_rank}4']
-        elif self.current_file == '7':
-            all_legal_moves = [f'{self.current_rank}6', f'{self.current_rank}5']
-        elif self.current_file == '1':
-            all_legal_moves = ['']
-        elif self.current_file == '8':
-            all_legal_moves = ['']
-        else:"""
-
-        # if self.colour == 'White':
-            # all_legal_moves = [f'{self.current_rank}{int(self.current_file)+1}']
+    def find_legal_moves_for(self) -> tuple:
 
         all_legal_moves = list()
 
@@ -155,7 +150,7 @@ class Pawn(ChessPiece):
         if self.colour == 'White':
             if self.current_file == '2':
                 all_legal_moves = [f'{self.current_rank}3', f'{self.current_rank}4']
-            elif self.current_file == '1':
+            elif self.current_file == '8':
                 all_legal_moves = ['Promotion']
             else:
                 all_legal_moves = [f'{self.current_rank}{int(self.current_file)+1}']
@@ -164,7 +159,7 @@ class Pawn(ChessPiece):
         elif self.colour == 'Black':
             if self.current_file == '7':
                 all_legal_moves = [f'{self.current_rank}6', f'{self.current_rank}5']
-            elif self.current_file == '8':
+            elif self.current_file == '1':
                 all_legal_moves = ['Promotion']
             else:
                 all_legal_moves = [f'{self.current_rank}{int(self.current_file)-1}']
@@ -173,6 +168,7 @@ class Pawn(ChessPiece):
 
 
 class Knight(ChessPiece):
+    """The Rook subclass of a ChessPiece."""
     name: str
     colour: str
     position: str
@@ -207,6 +203,7 @@ files = ['1', '2', '3', '4', '5', '6', '7', '8']
 
 
 def generate_legal_moves_for(piece) -> tuple:
+    """A function that takes a piece and returns the legal moves for that piece."""
 
     pieces = {
         0: Rook,
@@ -215,7 +212,9 @@ def generate_legal_moves_for(piece) -> tuple:
     }
 
     if piece.name == 'Rook':
-        return pieces[0].find_legal_moves(piece)
+        return pieces[0].find_legal_moves_for(piece)
+    if piece.name == 'Pawn':
+        return pieces[1].find_legal_moves_for(piece)
 
 
 def visualise_moves_for(piece):
@@ -226,12 +225,14 @@ def main():
     board = BoardState()
 
     rook_white = Rook(colour='White', position='A1', board=board)
-    pawn_black = Pawn(colour='Black', position='A7', board=board)
+    pawn_black = Pawn(colour='Black', position='G1', board=board)
+    pawn_white = Pawn(colour='White', position='A8', board=board)
 
     # print(list(map(generate_legal_moves_for, [pawn_black, rook_white])))
 
     # print(rook_white)
-    # print(generate_legal_moves_for(rook_white))
+    print(generate_legal_moves_for(pawn_black))
+    print(generate_legal_moves_for(pawn_white))
     # print(pawn_black.instructions())
 
     # print(board.state)
