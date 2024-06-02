@@ -70,7 +70,6 @@ class BoardState:
             'F8': '',
             'G8': '',
             'H8': '',
-
         }
 
     def __setitem__(self, key, value) -> None:
@@ -81,11 +80,14 @@ class ChessPiece:
     """
     The parent ChessPiece object.
 
-    print(ChessPiece) >>> ChessPiece.name(f'{ChessPiece.position') / e.g. Pawn('A5')
+    print(ChessPiece) >>> ChessPiece.name // f'{ChessPiece.position}' / e.g. Pawn('A5')
     """
 
     def __init__(self, board):
-        self.update_state(board)
+        self.name = None
+        self.position = None
+        self.current_rank = None
+        self.current_file = None
 
     def __str__(self):
         return f'{self.name}({self.position})'
@@ -103,26 +105,33 @@ class Rook(ChessPiece):
     current_file: str
 
     def __init__(self, colour, position, board):
+        super().__init__(ChessPiece)
         self.name = 'Rook'
         self.colour = colour
         self.position = position
         self.current_rank = position[0]
         self.current_file = position[1]
-        super().__init__(board)
+        self.update_state(board=board)
 
-    def find_legal_moves(self) -> tuple:
+    def find_legal_moves_for(self, board) -> tuple:
+
+        # todo: requires square occupancy detection
 
         all_legal_moves = list()
 
         for file in files:
-            if file == self.current_file:
+            if file == self.current_file:  # current file is skipped
                 continue
+
             all_legal_moves.append(f'{self.current_rank}{file}')
 
         for rank in ranks:
             if rank == self.current_rank:
                 continue
             all_legal_moves.append(f'{rank}{self.current_file}')
+
+        for coordinate in all_legal_moves:
+            ...
 
         return tuple(all_legal_moves)
 
@@ -136,11 +145,12 @@ class Pawn(ChessPiece):
     current_file: str
 
     def __init__(self, colour, position, board):
+        super().__init__(ChessPiece)
         self.name = 'Pawn'
         self.colour = colour
         self.current_rank = position[0]
         self.current_file = position[1]
-        super().__init__(board)
+        self.update_state(board=board)
 
     def find_legal_moves_for(self) -> tuple:
 
@@ -176,24 +186,38 @@ class Knight(ChessPiece):
     current_file: str
 
     def __init__(self, colour, position, board):
-        super().__init__(board)
+        super().__init__(ChessPiece)
         self.name = 'Knight'
         self.colour = colour
         self.current_rank = position[0]
         self.current_file = position[1]
-        super().__init__(board)
+        self.update_state(board=board)
 
-    def find_legal_moves(self) -> tuple:
+    def find_legal_moves_for(self) -> tuple:
         all_legal_moves = list()
 
-        # self.current_rank + 2, self.current_file + 1
-        # self.current_rank + 2, self.current_file - 1
-        # self.current_rank - 2, self.current_file - 1
-        # self.current_rank - 2, self.current_file + 1
-        # self.current_file + 2, self.current_rank + 1
-        # self.current_file + 2, self.current_rank - 1
-        # self.current_file - 2, self.current_rank + 1
-        # self.current_file - 2, self.current_rank - 1
+        """if self.rank == 'A':
+            if self.position == '1':
+                ...
+            elif self.position == '2':
+                ...
+            elif self.position == '':
+                ...
+        elif self.rank == 'B':
+            ...
+        elif self.rank == 'G':
+            ...
+        elif self.rank == 'H':
+            ...
+
+        self.current_rank + 2, self.current_file + 1
+        self.current_rank + 2, self.current_file - 1
+        self.current_rank - 2, self.current_file - 1
+        self.current_rank - 2, self.current_file + 1
+        self.current_file + 2, self.current_rank + 1
+        self.current_file + 2, self.current_rank - 1
+        self.current_file - 2, self.current_rank + 1
+        self.current_file - 2, self.current_rank - 1"""
 
         return tuple(all_legal_moves)
 
@@ -225,17 +249,17 @@ def main():
     board = BoardState()
 
     rook_white = Rook(colour='White', position='A1', board=board)
-    pawn_black = Pawn(colour='Black', position='G1', board=board)
-    pawn_white = Pawn(colour='White', position='A8', board=board)
+    # pawn_black = Pawn(colour='Black', position='G1', board=board)
+    # pawn_white = Pawn(colour='White', position='A8', board=board)
 
     # print(list(map(generate_legal_moves_for, [pawn_black, rook_white])))
 
-    # print(rook_white)
-    print(generate_legal_moves_for(pawn_black))
-    print(generate_legal_moves_for(pawn_white))
+    print(rook_white)
+    # print(generate_legal_moves_for(pawn_black))
+    # print(generate_legal_moves_for(pawn_white))
     # print(pawn_black.instructions())
 
-    # print(board.state)
+    print(board.state)
     # print(len(list(board.state.keys())))
 
 

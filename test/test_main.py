@@ -58,6 +58,13 @@ class TestVisualisationEngine:
         piece = m.Rook(colour='White', position='A1', board=board)
         assert m.generate_legal_moves_for(piece) == ('A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1')
 
+    def test_generate_legal_moves_with_obstruction(self):
+        board = setup_board()
+        m.Pawn(colour='Black', position='A5', board=board)
+        piece = m.Rook(colour='White', position='A1', board=board)
+
+        assert m.generate_legal_moves_for(piece) == ('A2', 'A3', 'A4', 'A5', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1')
+
     def test_visualise_moves_for(self):
         ...
 
